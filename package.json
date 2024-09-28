@@ -22,6 +22,7 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource/advent-pro": "^5.1.0",
-		"@fontsource/pirata-one": "^5.1.0"
+		"@fontsource/pirata-one": "^5.1.0",
+		"zod": "^3.23.8"
 	}
 }

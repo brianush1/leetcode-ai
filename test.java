@@ -1,6 +1,7 @@
 import java.util.*;
 public class test {
 	public static void main(String[] args) {
-		System.out.println("asd");
+		Scanner scan = new Scanner(System.in);
+		System.out.println(scan.nextLine());
 	}
 }
