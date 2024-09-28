@@ -1,5 +1,6 @@
 import { spawn } from "child_process";
-import { mkdtemp, readFile, rmdir, unlink, writeFile } from "fs/promises";
+import { chown, existsSync } from "fs";
+import { chmod, mkdtemp, readFile, rmdir, unlink, writeFile } from "fs/promises";
 import { tmpdir } from "os";
 import { join } from "path";
 import z from "zod";
@@ -25,7 +26,7 @@ export interface CompilationResult {
 	compiled: Buffer;
 }
 
-const COMPILATION_TIME_LIMIT = 3000;
+const COMPILATION_TIME_LIMIT = 8000;
 const EXECUTION_TIME_LIMIT = 4000;
 
 export async function compile(language: Language, filename: string, code: string): Promise<CompilationResult | "error"> {
@@ -85,6 +86,55 @@ export async function compile(language: Language, filename: string, code: string
 			compiled: Buffer.from(code, "utf-8"),
 			language: "python",
 		};
+	}
+	else if (language === "c++") {
+		if (!filename.endsWith(".cpp")) {
+			return "error";
+		}
+		const basename = filename.substring(0, filename.length - ".cpp".length);
+		const tempDir = await mkdtemp(join(tmpdir(), "shellhacks2024-"));
+		const tmpfile = join(tempDir, basename + ".cpp");
+		await writeFile(tmpfile, code, "utf-8");
+		const tmpfile2 = join(tempDir, basename);
+		const proc = spawn("docker", [
+			"run",
+			"--rm",
+			"-v", `${tempDir}:/work:rw`,
+			"-t", "cgr.dev/chainguard/gcc-glibc:latest",
+			"-O2", `/work/${basename}.cpp`, "-o", `/work/${basename}`, "-lstdc++",
+		]);
+		const killTimeout = setTimeout(() => {
+			proc.kill("SIGKILL");
+		}, COMPILATION_TIME_LIMIT);
+		return await new Promise(resolve => {
+			const chunks: any[] = [];
+			const errorChunks: any[] = [];
+			proc.stdout.on("data", chunk => {
+				chunks.push(chunk);
+			});
+			proc.stderr.on("data", chunk => {
+				errorChunks.push(chunk);
+			});
+			proc.on("close", async code => {
+				clearTimeout(killTimeout);
+				await unlink(tmpfile);
+				const compiled = code === 0 ? await readFile(tmpfile2) : Buffer.alloc(0);
+				try { await unlink(tmpfile2); } catch (e) {}
+				await rmdir(tempDir);
+				if (code === 0) {
+					resolve({
+						language: "c++",
+						basename,
+						compiled,
+					});
+				}
+				else {
+					console.log(Buffer.concat(chunks).toString("utf-8"));
+					console.log(Buffer.concat(errorChunks).toString("utf-8"));
+					resolve("error");
+				}
+			});
+		});
 	}
 	else {
 		return "error";
@@ -147,6 +197,45 @@ export async function run(compiled: CompilationResult, input: string): Promise<{
 			"-v", `${tmpfile1}:/home/python/${basename}.py`,
 			"-i", "cgr.dev/chainguard/python:latest",
 			`/home/python/${basename}.py`,
+		]);
+		proc.stdin.end(Buffer.from(input, "utf-8"));
+		const killTimeout = setTimeout(() => {
+			proc.kill("SIGKILL");
+		}, EXECUTION_TIME_LIMIT);
+		return await new Promise(resolve => {
+			const chunks: any[] = [];
+			const errorChunks: any[] = [];
+			proc.stdout.on("data", chunk => {
+				chunks.push(chunk);
+			});
+			proc.stderr.on("data", chunk => {
+				errorChunks.push(chunk);
+			});
+			proc.on("close", async code => {
+				clearTimeout(killTimeout);
+				await unlink(tmpfile1);
+				await rmdir(tempDir);
+				resolve({
+					stdout: Buffer.concat(chunks).toString("utf-8").replace(/\r\n/g, "\n"),
+					stderr: Buffer.concat(errorChunks).toString("utf-8").replace(/\r\n/g, "\n"),
+					exitCode: code ?? -1,
+				});
+			});
+		});
+	}
+	else if (compiled.language === "c++") {
+		const basename = compiled.basename;
+		const tempDir = await mkdtemp(join(tmpdir(), "shellhacks2024-"));
+		const tmpfile1 = join(tempDir, basename);
+		await writeFile(tmpfile1, compiled.compiled);
+		await chmod(tmpfile1, 0o555);
+		const proc = spawn("docker", [
+			"run",
+			"--rm",
+			"-v", `${tmpfile1}:/executable`,
+			"--platform", "linux/amd64",
+			"-i", "cgr.dev/chainguard/glibc-dynamic:latest",
+			"/executable",
 		]);
 		proc.stdin.end(Buffer.from(input, "utf-8"));
 		const killTimeout = setTimeout(() => {

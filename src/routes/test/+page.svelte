@@ -2,13 +2,22 @@
 	import { apiCall } from "$lib/api";
 	import type { JudgeResponse } from "../api/judge/+server";
 
-	let code: string = `x = input()
-print("input:", x)`;
-	let filename: string = "test.py";
+	let code: string = `#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	string s;
+	cin >> s;
+
+	cout << "input is: " << s << "\\n";
+
+	return 0;
+}`;
+	let filename: string = "test.cpp";
 
 	async function onTest() {
 		const res: JudgeResponse = await apiCall("judge", {
-			language: "python",
+			language: "c++",
 			filename,
 			code,
 		});
