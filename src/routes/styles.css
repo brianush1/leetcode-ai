@@ -6,3 +6,27 @@
 	font-size: 14px;
 	box-sizing: border-box;
 }
+
+/* Define the animation keyframes */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Apply the animated gradient background to the desired element */
+body {
+    height: 100vh;
+    background: linear-gradient(45deg, #2c003e, #4b0082, #800080, #2c003e);
+    background-size: 300% 300%;
+    animation: gradientAnimation 10s ease infinite;
+    justify-content: center;
+    align-items: center;
+}
+
