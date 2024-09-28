@@ -4,18 +4,18 @@
 </script>
 
 <div class="main">
-  <div id="title">Lootcode 10</div>
-  <div id="content">
-    <div id="map-container">
-      <img src="/map.jpg" alt="Lootcode Map" id="lootcode-map" />
-      <Area message="Sorting/Searching" vertical={40} horizontal={52.5}></Area>
-      <Area message="Strings" vertical={40} horizontal={90}></Area>
-      <Area message="DP" vertical={60} horizontal={64}></Area>
-      <Area message="Graph Algorithms" vertical={80} horizontal={8}></Area>
-      <Area message="Range Queries" vertical={30} horizontal={12}></Area>
-      <Area message="Trees" vertical={70} horizontal={27}></Area>
-      <Area message="Math" vertical={50} horizontal={20}></Area>
-      <Area message="Geometry" vertical={10} horizontal={35}></Area>
+  <div class="title">Lootcode 10</div>
+  <div class="content">
+    <div class="map-container">
+      <img src="/map.jpg" alt="Lootcode Map" class="lootcode-map" />
+      <Area id="sorting-searching" message="Sorting/Searching" vertical={40} horizontal={52.5}></Area>
+      <Area id="strings" message="Strings" vertical={40} horizontal={90}></Area>
+      <Area id="dp" message="DP" vertical={60} horizontal={64}></Area>
+      <Area id="graph-algorithms" message="Graph Algorithms" vertical={80} horizontal={8}></Area>
+      <Area id="range-queries" message="Range Queries" vertical={30} horizontal={12}></Area>
+      <Area id="trees" message="Trees" vertical={70} horizontal={27}></Area>
+      <Area id="math" message="Math" vertical={50} horizontal={20}></Area>
+      <Area id="geometry" message="Geometry" vertical={10} horizontal={35}></Area>
     </div>
   </div>
 </div>
@@ -29,7 +29,7 @@
     padding: 48px 0;
   }
 
-  #title {
+  .title {
     text-align: center;
     color: white;
     font-size: 48px;
@@ -37,12 +37,12 @@
     font-family: 'Advent Pro', sans-serif;
   }
 
-  #map-container {
+  .map-container {
     display: inline-block;
     position: relative;
   }
 
-  #lootcode-map {
+  .lootcode-map {
     border-radius: 15px; 
   }
 

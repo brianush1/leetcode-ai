@@ -2,24 +2,26 @@
     export let message: string;
     export let vertical: number;
     export let horizontal: number;
+    export let id: string;
   </script>
-  
-  <div 
-    id="marker"
+
+  <a
+    href="/regions/{id}"
+    class="marker"
     style:top="{vertical}%"
     style:left="{horizontal}%"
   >
-    <div id="circle"></div>
-    <div id="label">{message}</div>
-  </div>
-  
+    <div class="circle"></div>
+    <div class="label">{message}</div>
+  </a>
+
   <style>
-    #marker {
+    .marker {
       position: absolute;
     }
   
     /* Circle styles */
-    #circle {
+    .circle {
       width: 30px;
       height: 30px;
       background-color: #ef4444;
@@ -30,12 +32,12 @@
       box-sizing: border-box;
     }
     
-    #circle:hover {
+    .circle:hover {
       border-width: 4px;
     }
   
     /* Label (rectangle) styles */
-    #label {
+    .label {
       position: absolute;
       top: 35px;
       left: -65px;
@@ -52,7 +54,7 @@
     }
   
     /* Show the label when hovering over the circle */
-    #circle:hover + #label {
+    .circle:hover + .label {
       opacity: 0.9;
     }
   </style>
