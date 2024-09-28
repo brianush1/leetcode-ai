@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { apiCall } from "$lib/api";
-	import type { JudgeResponse } from "../routes/api/judge/+server";
+	import type { JudgeResponse } from "../../routes/api/judge/+server";
 
 	let code: string = `#include <bits/stdc++.h>
 using namespace std;

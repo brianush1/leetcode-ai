@@ -1,6 +1,6 @@
 <script>
-    import Problem from "../../components/problem.svelte";
-    import Ide from "../../components/ide.svelte"
+    import Problem from "$lib/components/Problem.svelte";
+    import Ide from "$lib/components/Ide.svelte"
     let title = "Problem 1"
     let description = "Dis problem is no easyyyyy"
     let expectedInput = "Some input"
