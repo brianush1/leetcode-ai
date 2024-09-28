@@ -16,6 +16,7 @@ export const JudgeVerdict = z.union([
 	z.literal("accepted"),
 	z.literal("wrong-answer"),
 	z.literal("compile-error"),
+	z.literal("runtime-error"),
 	z.literal("time-limit"),
 ]);
 export type JudgeVerdict = z.TypeOf<typeof JudgeVerdict>;
@@ -145,6 +146,7 @@ export async function run(compiled: CompilationResult, input: string): Promise<{
 	stdout: string;
 	stderr: string;
 	exitCode: number;
+	tle: boolean;
 }> {
 	if (compiled.language === "java") {
 		const basename = compiled.basename;
@@ -173,7 +175,7 @@ export async function run(compiled: CompilationResult, input: string): Promise<{
 			proc.stderr.on("data", chunk => {
 				errorChunks.push(chunk);
 			});
-			proc.on("close", async code => {
+			proc.on("close", async (code, signal) => {
 				clearTimeout(killTimeout);
 				await unlink(tmpfile1);
 				await unlink(tmpfile2);
@@ -182,6 +184,7 @@ export async function run(compiled: CompilationResult, input: string): Promise<{
 					stdout: Buffer.concat(chunks).toString("utf-8").replace(/\r\n/g, "\n"),
 					stderr: Buffer.concat(errorChunks).toString("utf-8").replace(/\r\n/g, "\n"),
 					exitCode: code ?? -1,
+					tle: signal === "SIGKILL",
 				});
 			});
 		});
@@ -198,6 +201,7 @@ export async function run(compiled: CompilationResult, input: string): Promise<{
 			"-i", "cgr.dev/chainguard/python:latest",
 			`/home/python/${basename}.py`,
 		]);
+		proc.stdin.on("error", e => {});
 		proc.stdin.end(Buffer.from(input, "utf-8"));
 		const killTimeout = setTimeout(() => {
 			proc.kill("SIGKILL");
@@ -211,7 +215,7 @@ export async function run(compiled: CompilationResult, input: string): Promise<{
 			proc.stderr.on("data", chunk => {
 				errorChunks.push(chunk);
 			});
-			proc.on("close", async code => {
+			proc.on("close", async (code, signal) => {
 				clearTimeout(killTimeout);
 				await unlink(tmpfile1);
 				await rmdir(tempDir);
@@ -219,6 +223,7 @@ export async function run(compiled: CompilationResult, input: string): Promise<{
 					stdout: Buffer.concat(chunks).toString("utf-8").replace(/\r\n/g, "\n"),
 					stderr: Buffer.concat(errorChunks).toString("utf-8").replace(/\r\n/g, "\n"),
 					exitCode: code ?? -1,
+					tle: signal === "SIGKILL",
 				});
 			});
 		});
@@ -237,6 +242,7 @@ export async function run(compiled: CompilationResult, input: string): Promise<{
 			"-i", "cgr.dev/chainguard/glibc-dynamic:latest",
 			"/executable",
 		]);
+		proc.stdin.on("error", e => {});
 		proc.stdin.end(Buffer.from(input, "utf-8"));
 		const killTimeout = setTimeout(() => {
 			proc.kill("SIGKILL");
@@ -250,7 +256,7 @@ export async function run(compiled: CompilationResult, input: string): Promise<{
 			proc.stderr.on("data", chunk => {
 				errorChunks.push(chunk);
 			});
-			proc.on("close", async code => {
+			proc.on("close", async (code, signal) => {
 				clearTimeout(killTimeout);
 				await unlink(tmpfile1);
 				await rmdir(tempDir);
@@ -258,6 +264,7 @@ export async function run(compiled: CompilationResult, input: string): Promise<{
 					stdout: Buffer.concat(chunks).toString("utf-8").replace(/\r\n/g, "\n"),
 					stderr: Buffer.concat(errorChunks).toString("utf-8").replace(/\r\n/g, "\n"),
 					exitCode: code ?? -1,
+					tle: signal === "SIGKILL",
 				});
 			});
 		});

@@ -1,5 +1,6 @@
 import type { APIErrors } from "$lib/api.js";
 import { JudgeVerdict, Language, compile, run } from "$lib/server/judge.js";
+import { getProblemList, judgeSubmission } from "$lib/server/problems.js";
 import { json } from "@sveltejs/kit";
 import z from "zod";
 
@@ -25,11 +26,11 @@ export async function POST({ request, fetch, cookies }) {
 
 	const { code, filename, language } = input.data;
 
-	const compilation = await compile(language, filename, code);
-	console.log(compilation);
-	if (compilation !== "error") {
-		console.log(await run(compilation, "dhdfdfdfg"));
-	}
+	// console.log();
+
+	const stat = (await getProblemList()).get("Geometry")![0];
+	console.log(stat);
+	console.log(await judgeSubmission(stat, language, filename, code));
 
 	return json({
 		success: true,
