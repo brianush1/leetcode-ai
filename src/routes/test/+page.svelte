@@ -2,18 +2,13 @@
 	import { apiCall } from "$lib/api";
 	import type { JudgeResponse } from "../api/judge/+server";
 
-	let code: string = `import java.util.*;
-public class test {
-	public static void main(String[] args) {
-		System.out.println("asd");
-	}
-}
-`;
-	let filename: string = "test.java";
+	let code: string = `x = input()
+print("input:", x)`;
+	let filename: string = "test.py";
 
 	async function onTest() {
 		const res: JudgeResponse = await apiCall("judge", {
-			language: "java",
+			language: "python",
 			filename,
 			code,
 		});

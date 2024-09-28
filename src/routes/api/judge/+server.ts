@@ -26,6 +26,7 @@ export async function POST({ request, fetch, cookies }) {
 	const { code, filename, language } = input.data;
 
 	const compilation = await compile(language, filename, code);
+	console.log(compilation);
 	if (compilation !== "error") {
 		console.log(await run(compilation, "dhdfdfdfg"));
 	}
