@@ -14,10 +14,8 @@
   </div>
   
   <style>
-    /* Marker container positioned absolutely */
     #marker {
       position: absolute;
-      /* No additional positioning needed here */
     }
   
     /* Circle styles */
@@ -40,8 +38,8 @@
     #label {
       position: absolute;
       top: 35px;
-      left: -55px;
-      width: 140px;
+      left: -65px;
+      width: 150px;
       height: 28px;
       background-color: #15162C;
       border: 2px solid #a855f7;
