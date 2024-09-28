@@ -1,26 +1,20 @@
 <script lang="ts">
-    import Test from "../routes/test/+page.svelte"
     export let title: string;
     export let description: string;
     export let expectedInput: string;
     export let expectedOutput: string;
 </script>
 
-<div class="container3">
-    <div class="container1">
-        <div class="title">{title}</div>
-        <div>{description}</div>
-        <div class="container2">
-            <div class="subheading">Example input</div>
-            <div>{expectedInput}</div>
-        </div>
-        <div class="container2">
-            <div class="subheading">Expected output</div>
-            <div>{expectedOutput}</div>
-        </div>
+<div class="container1">
+    <div class="title">{title}</div>
+    <div>{description}</div>
+    <div class="container2">
+        <div class="subheading">Example input</div>
+        <div>{expectedInput}</div>
     </div>
-    <div class="container4">
-        <Test />
+    <div class="container2">
+        <div class="subheading">Expected output</div>
+        <div>{expectedOutput}</div>
     </div>
 </div>
 
@@ -28,30 +22,18 @@
     .container1 {
         display: flex;
         flex-direction: column;
-        gap: 50px;
+        justify-content: space-between;
         border: 2px solid lightblue;
         border-radius: 10px;
         padding: 10px;
         width: max-content;
+        background-color: #111827;
     }
 
     .container2 {
         display: flex;
         flex-direction: column;
         gap: 20px;
-    }
-
-    .container3 {
-        display: flex;
-        flex-direction: row;
-        gap: 50px;
-        color: lightblue
-    }
-
-    .container4 {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
     }
 
     .title {
