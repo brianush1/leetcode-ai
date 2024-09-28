@@ -5,34 +5,36 @@ import { json } from "@sveltejs/kit";
 import z from "zod";
 
 const schema = z.object({
-	language: Language,
-	filename: z.string(),
-	code: z.string(),
+  language: Language,
+  filename: z.string(),
+  code: z.string(),
 });
 
-export type JudgeResponse = {
-	success: true;
-	verdict: JudgeVerdict;
-} | APIErrors;
+export type JudgeResponse =
+  | {
+      success: true;
+      verdict: JudgeVerdict;
+    }
+  | APIErrors;
 
 export async function POST({ request, fetch, cookies }) {
-	const input = schema.safeParse(await request.json());
-	if (!input.success) {
-		return json({
-			success: false,
-			errors: input.error.flatten(),
-		});
-	}
+  const input = schema.safeParse(await request.json());
+  if (!input.success) {
+    return json({
+      success: false,
+      errors: input.error.flatten(),
+    });
+  }
 
-	const { code, filename, language } = input.data;
+  const { code, filename, language } = input.data;
 
-	// console.log();
+  // console.log();
 
-	const stat = (await getProblemList()).get("Geometry")![0];
-	console.log(stat);
-	console.log(await judgeSubmission(stat, language, filename, code));
+  const stat = (await getProblemList()).get("geometry")![0];
+  console.log(stat);
+  console.log(await judgeSubmission(stat, language, filename, code));
 
-	return json({
-		success: true,
-	});
+  return json({
+    success: true,
+  });
 }
