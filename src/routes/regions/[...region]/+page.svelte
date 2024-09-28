@@ -1,12 +1,15 @@
 <script>
 	import "@fontsource/advent-pro";
+
+	
 </script>
 
 <div class="main">
-	<div id="title">Lootcode 10</div>
-	<div id="content">
-		<div id="map-container">
-			<img src="/map.jpg" alt="Lootcode Map" id="lootcode-map" />
+	<div class="title">Lootcode 10</div>
+	<div class="subtitle">Lootcode 10</div>
+	<div class="content">
+		<div class="map-container">
+			<img src="/map.jpg" alt="Lootcode Map" class="lootcode-map" />
 		</div>
 	</div>
 </div>
@@ -20,7 +23,7 @@
 		padding: 48px 0;
 	}
 
-	#title {
+	.title {
 		text-align: center;
 		color: white;
 		font-size: 48px;
@@ -28,12 +31,21 @@
 		font-family: 'Advent Pro', sans-serif;
 	}
 
-	#map-container {
+	.subtitle {
+		text-align: center;
+		color: white;
+		font-size: 36px;
+		margin-top: -36px;
+		margin-bottom: 48px;
+		font-family: 'Advent Pro', sans-serif;
+	}
+
+	.map-container {
 		display: inline-block;
 		position: relative;
 	}
 
-	#lootcode-map {
+	.lootcode-map {
 		border-radius: 15px; 
 	}
 

@@ -1,8 +1,12 @@
 <script lang="ts">
-    export let message: string;
+	import { REGIONS } from "$lib/regions";
+
     export let vertical: number;
     export let horizontal: number;
     export let id: string;
+
+    let message: string;
+    $: message = REGIONS[id].title;
   </script>
 
   <a
