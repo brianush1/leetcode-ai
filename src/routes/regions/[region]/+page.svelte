@@ -7,6 +7,7 @@
 
 	export let data: {
 		regionData: (typeof REGIONS)[string];
+		solvedProblems: number[];
 		problems: {
 			id: number;
 			name: string;
@@ -20,6 +21,27 @@
 	$: regionId = $page.params.region;
 
 	let problems = data.problems;
+
+	let isLocked: Map<number, boolean>;
+	$: {
+		isLocked = new Map<number, boolean>();
+		for (const problem of problems) {
+			isLocked.set(problem.id, !data.solvedProblems.find(x => x === problem.id));
+		}
+
+		const nextProblems = new Set<number>();
+		for (const problem of problems) {
+			const prereqs = problems.filter(x => x.outedges.find(y => y === problem.id)).map(x => x.id);
+			const allPrereqsUnlocked = prereqs.every(x => !isLocked.get(x));
+			if (allPrereqsUnlocked) {
+				nextProblems.add(problem.id);
+			}
+		}
+
+		for (const p of nextProblems) {
+			isLocked.set(p, false);
+		}
+	}
 
 	let canvas: HTMLCanvasElement;
 
@@ -127,6 +149,7 @@
 							problems = problems.filter(x => x.id !== problem.id);
 						}} -->
 					<ProblemButton
+						locked={isLocked.get(problem.id)}
 						regionId={regionId}
 						problemId={problem.id}
 						message={problem.name}
