@@ -1,34 +1,76 @@
 <script lang="ts">
 	import { apiCall } from "$lib/api";
 	import type { JudgeResponse } from "../../routes/api/judge/+server";
+	import { onDestroy, onMount } from "svelte";
+	import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
+	import type { Language } from "$lib/server/judge";
 
 	export let problemId: number;
 
-	let code: string = `#include <bits/stdc++.h>
-using namespace std;
+	let language = "c++";
 
-int main() {
-	string s;
-	cin >> s;
+	let editor: Monaco.editor.IStandaloneCodeEditor;
+	let monaco: typeof Monaco;
+	let editorContainer: HTMLElement;
 
-	cout << "input is: " << s << "\\n";
+	function setupLanguage(language: Language) {
+		if (language === "python") {
+			const model = monaco.editor.createModel(
+				"# write your solution here\n# be sure to read and write to standard I/O streams",
+				"python"
+			);
+			editor.setModel(model);
+		}
+		else if (language === "c++") {
+			const model = monaco.editor.createModel(
+				"#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n\t// write your solution here\n\t// be sure to read and write to standard I/O streams\n\t\n}\n",
+				"cpp"
+			);
+			editor.setModel(model);
+		}
+		else if (language === "java") {
+			const model = monaco.editor.createModel(
+				"import java.util.*;\nimport java.io.*;\nimport java.math.*\n\npublic class Submission {"
+				+ "\n\n\tpublic static void main(String[] args) throws Exception {\n\t\t"
+				+ "// write your solution here\n\t\t// be sure to read and write to standard I/O streams\n\t\t\n\t}\n\n}\n",
+				"java"
+			);
+			editor.setModel(model);
+		}
+	}
 
-	return 0;
-}`;
-	let filename: string = "test.cpp";
+	onMount(async () => {
+		// Import our 'monaco.ts' file here
+		// (onMount() will only be executed in the browser, which is what we want)
+		monaco = (await import("./monaco")).default;
+
+		// Your monaco instance is ready, let's display some code!
+		editor = monaco.editor.create(editorContainer, {
+			automaticLayout: true,
+			theme: "vs-dark",
+		});
+	});
+
+	onDestroy(() => {
+		monaco?.editor.getModels().forEach((model) => model.dispose());
+		editor?.dispose();
+	});
+
+	$: if (editor) {
+		setupLanguage(language as Language);
+	}
 
 	async function onTest() {
 		const res: JudgeResponse = await apiCall("judge", {
 			problemId,
 			language,
-			filename,
-			code,
+			filename: `Submission.${language === "java" ? "java" : language === "python" ? "py" : "cpp"}`,
+			code: editor.getValue(),
 		});
 		console.log(res, language);
 	}
 
 	let isOpen = false;
-	let language = "c++"
 </script>
 
 <div class="container1">
@@ -56,16 +98,25 @@ int main() {
 			</div>
 		</div>
 	</div>
-    <p>Write {language[0].toUpperCase() + language.slice(1, language.length)} code here:</p>
-    <input type="text" placeholder="Filename" bind:value={filename}><br>
-    <textarea bind:value={code}></textarea><br>
-    <button on:click={onTest}>Test</button>
+	<p>Write {language[0].toUpperCase() + language.slice(1, language.length)} code here:</p>
+	<div class="editor" bind:this={editorContainer}></div>
+	<button class="submit-btn" on:click={onTest}>Submit</button>
 </div>
 
 <style>
-	textarea {
-		width: 800px;
-		height: 400px;
+	.editor {
+		width: 50vw;
+		height: 600px;
+	}
+
+	.submit-btn {
+		border: none;
+		background: linear-gradient(45deg, yellow, orange);
+		color: black;
+		padding: 8px;
+		font-size: 24px;
+		font-weight: 700;
+		border-radius: 16px;
 	}
 
     .container1 {

@@ -35,6 +35,7 @@
     font-size: 48px;
     margin-bottom: 48px;
     font-family: 'Advent Pro', sans-serif;
+    margin-top: 45px;
   }
 
   .map-container {

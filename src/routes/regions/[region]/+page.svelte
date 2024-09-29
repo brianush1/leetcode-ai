@@ -78,7 +78,10 @@
 			for (const out of problem.outedges) {
 				const outp = problems.find(x => x.id === out)!;
 				if (!outp) continue;
-				ctx.strokeStyle = "#4448";
+				if (!isLocked.get(outp.id))
+					ctx.strokeStyle = "#000";
+				else
+					ctx.strokeStyle = "#0004";
 				drawArrow(
 					problem.x, problem.y,
 					outp.x, outp.y,

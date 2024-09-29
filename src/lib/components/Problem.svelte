@@ -1,11 +1,20 @@
 <script lang="ts">
+	import BackButton from "./BackButton.svelte";
+
     export let title: string;
     export let alreadySolved: boolean;
+    export let regionId: string;
     export let description: string;
 </script>
 
 <div class="container1">
-    <div class="title">{title}<div class="tag {alreadySolved ? "solved" : ""}">{alreadySolved ? "SOLVED" : "UNSOLVED"}</div></div>
+    <div class="title">
+        <div class="inner-title">
+            <BackButton backUrl="/regions/{regionId}" />
+            {title}
+        </div>
+        <div class="tag {alreadySolved ? "solved" : ""}">{alreadySolved ? "SOLVED" : "UNSOLVED"}</div>
+    </div>
     <div>{@html description}</div>
 </div>
 
@@ -20,18 +29,20 @@
         background-color: #111827;
     }
 
-    .container2 {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
     .title {
         font-size: x-large;
         font-weight: bold;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        align-items: center;
+    }
+
+    .inner-title {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        gap: 8px;
     }
 
     .subheading {

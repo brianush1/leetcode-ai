@@ -14,7 +14,7 @@
 </script>
 
 <div class="container1">
-    <Problem title={title} description={description} alreadySolved={data.alreadySolved}/>
+    <Problem title={title} regionId={$page.params.region} description={description} alreadySolved={data.alreadySolved}/>
     <Ide problemId={parseInt($page.params.problem)} />
 </div>
 
@@ -25,6 +25,7 @@
         align-items: stretch;
         height: calc(100vh - 16px);
         gap: 8px;
-        color: lightblue
+        color: lightblue;
+        margin-top: 58px;
     }
 </style>

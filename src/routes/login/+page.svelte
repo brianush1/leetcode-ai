@@ -3,7 +3,7 @@
     import "@fontsource/advent-pro";
 </script>
 
-<div class="header">Lootcode 10</div>
+<div class="header push">Lootcode 10</div>
 <div class="header">Login</div>
 
 <div>
@@ -12,10 +12,15 @@
 
 <style>
     .header {
-    text-align: center;
-    color: white;
-    font-size: 48px;
-    margin-bottom: 48px;
-    font-family: 'Advent Pro', sans-serif;
-  }
+        text-align: center;
+        color: white;
+        font-size: 48px;
+        margin-bottom: 48px;
+        font-family: 'Advent Pro', sans-serif;
+    }
+
+    .push {
+        margin-top: 100px;
+    }
+
 </style>
