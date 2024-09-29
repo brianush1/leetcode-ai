@@ -9,6 +9,8 @@
 	export let problemId: number;
 	export let regionId: string;
 	export let alreadySolved: boolean;
+	export let title: string;
+	export let description: string;
 
 	let language = "c++";
 
@@ -66,6 +68,11 @@
 	let isProcessing = false;
 	let showVerdict: JudgeVerdict | undefined;
 
+	let hintVerdict: JudgeVerdict = "wrong-answer";
+	let hintStatus: "none" | "offer" | "generating" | {
+		hint: string;
+	} = "none";
+
 	async function onTest() {
 		isProcessing = true;
 
@@ -81,6 +88,10 @@
 				showVerdict = res.verdict;
 				if (res.verdict === "accepted") {
 					alreadySolved = true;
+				}
+				else {
+					hintVerdict = res.verdict;
+					hintStatus = "offer";
 				}
 			}
 		}
@@ -120,6 +131,34 @@
 	<p>Write {language[0].toUpperCase() + language.slice(1, language.length)} code here:</p>
 	<div class="editor" bind:this={editorContainer}></div>
 	<button class="btn" on:click={onTest} disabled={isProcessing}>{isProcessing ? "Judging..." : "Submit"}</button>
+	{#if hintStatus === "offer" || hintStatus === "generating"}
+		<div class="ai-hint">
+			Would you like an AI-generated hint?
+			<div class="button-bar">
+				<button disabled={hintStatus === "generating"} class="btn" on:click={async () => {
+					hintStatus = "generating";
+					const result = await apiCall("get-hint", {
+						verdict: hintVerdict,
+						title,
+						description,
+						language,
+						filename: `Submission.${language === "java" ? "java" : language === "python" ? "py" : "cpp"}`,
+						code: editor.getValue(),
+					});
+					hintStatus = {
+						hint: result.success ? result.hint : "Failed to get hint"
+					};
+				}}>Yes</button>
+				<button disabled={hintStatus === "generating"} class="btn" on:click={() => {
+					hintStatus = "none";
+				}}>No</button>
+			</div>
+		</div>
+	{:else if hintStatus !== "none"}
+		<div class="ai-hint">
+			<b>Hint:</b> {hintStatus.hint}
+		</div>
+	{/if}
 </div>
 
 {#if showVerdict}
@@ -163,6 +202,14 @@
 
 	.popup > * {
 		margin: 0;
+	}
+
+	.ai-hint {
+		display: flex;
+		flex-direction: row;
+		gap: 8px;
+		align-items: center;
+		font-size: 24px;
 	}
 
 	.button-bar {

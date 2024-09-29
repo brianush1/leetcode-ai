@@ -15,7 +15,13 @@
 
 <div class="container1">
     <Problem title={title} regionId={$page.params.region} description={description} alreadySolved={data.alreadySolved}/>
-    <Ide problemId={parseInt($page.params.problem)} />
+    <Ide
+        title={title}
+        description={description}
+        problemId={parseInt($page.params.problem)}
+        regionId={$page.params.region}
+        bind:alreadySolved={data.alreadySolved}
+    />
 </div>
 
 <style>
