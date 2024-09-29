@@ -29,12 +29,6 @@
         background-color: #111827;
     }
 
-    .container2 {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
     .title {
         font-size: x-large;
         font-weight: bold;

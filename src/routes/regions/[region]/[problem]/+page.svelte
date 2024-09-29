@@ -25,6 +25,7 @@
         align-items: stretch;
         height: calc(100vh - 16px);
         gap: 8px;
-        color: lightblue
+        color: lightblue;
+        margin-top: 58px;
     }
 </style>
