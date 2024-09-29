@@ -1,5 +1,6 @@
 <script>
     import Form from "../Form.svelte";
+    import "@fontsource/advent-pro";
 </script>
 
 <div class="header">Lootcode 10</div>
@@ -17,5 +18,4 @@
     margin-bottom: 48px;
     font-family: 'Advent Pro', sans-serif;
   }
-
 </style>
