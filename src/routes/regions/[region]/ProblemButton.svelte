@@ -4,6 +4,7 @@
     export let regionId: string;
     export let problemId: number;
     export let locked: boolean = false;
+    export let solved: boolean = false;
     export let message: string;
 
     function onDragover(e: DragEvent) {
@@ -21,7 +22,7 @@ on:dblclick={onDoubleClick} -->
 
   <a
     href={locked ? "#" : `/regions/${regionId}/${problemId}`}
-    class="marker {locked ? "locked" : ""}"
+    class="marker {locked ? "locked" : ""} {solved ? "solved" : ""}"
     style:top="calc({vertical}% - 15px)"
     style:left="calc({horizontal}% - 15px)"
   >
@@ -49,6 +50,10 @@ on:dblclick={onDoubleClick} -->
       border-radius: 50%;
       transition: border-width 0.15s ease-in-out;
       box-sizing: border-box;
+    }
+
+    .solved > .circle {
+      background-color: #fc0;
     }
     
     .marker:not(.locked):hover > .circle {

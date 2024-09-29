@@ -23,10 +23,13 @@
 	let problems = data.problems;
 
 	let isLocked: Map<number, boolean>;
+	let isSolved: Map<number, boolean>;
 	$: {
 		isLocked = new Map<number, boolean>();
+		isSolved = new Map<number, boolean>();
 		for (const problem of problems) {
 			isLocked.set(problem.id, !data.solvedProblems.find(x => x === problem.id));
+			isSolved.set(problem.id, !!data.solvedProblems.find(x => x === problem.id));
 		}
 
 		const nextProblems = new Set<number>();
@@ -149,6 +152,7 @@
 							problems = problems.filter(x => x.id !== problem.id);
 						}} -->
 					<ProblemButton
+						solved={isSolved.get(problem.id)}
 						locked={isLocked.get(problem.id)}
 						regionId={regionId}
 						problemId={problem.id}
