@@ -28,5 +28,6 @@ body {
     animation: gradientAnimation 10s ease infinite;
     justify-content: center;
     align-items: center;
+    font-family: Ubuntu, Arial, Helvetica, sans-serif;
 }
 

@@ -3,8 +3,10 @@
     import Ide from "$lib/components/Ide.svelte"
 	import type { REGIONS } from "$lib/regions";
 	import type { ProblemStatement } from "$lib/server/problems";
+	import { page } from "$app/stores";
     export let data: {
         regionData: typeof REGIONS[string];
+        alreadySolved: boolean;
         problemData: ProblemStatement;
     };
     let title = data.problemData.name;
@@ -12,8 +14,8 @@
 </script>
 
 <div class="container1">
-    <Problem title={title} description={description}/>
-    <Ide />
+    <Problem title={title} description={description} alreadySolved={data.alreadySolved}/>
+    <Ide problemId={parseInt($page.params.problem)} />
 </div>
 
 <style>
