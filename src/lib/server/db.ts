@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync, existsSync } from "fs";
 export interface Database {
 	users: {
 		username: string;
-		password: string;
+		passwordHash: string;
 		token: string;
 		solvedProblems: number[];
 	}[];

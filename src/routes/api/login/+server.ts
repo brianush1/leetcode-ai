@@ -2,6 +2,7 @@ import { error, json } from "@sveltejs/kit";
 import z from "zod";
 import type { APIErrors } from "$lib/api.js";
 import { data, saveData } from "$lib/server/db";
+import argon2 from "argon2";
 
 const schema = z.object({
     username: z.string(),
@@ -26,7 +27,8 @@ export async function POST({ request, fetch, cookies }) {
   
     const { username, password } = input.data;
 
-    if (!data.users.find(x => x.username === username)) {
+    const user = data.users.find(x => x.username === username);
+    if (!user) {
       return json({
         success: false,
         errors: {
@@ -37,8 +39,17 @@ export async function POST({ request, fetch, cookies }) {
         },
       });
     }
-    const user = data.users.find(x => x.password === password);
-    if (!user) {
+
+    // at one point during development, we stored plaintext passwords
+    // this automatically hashes them on access
+    if ("password" in user) {
+      if (password === user.password) {
+        delete user["password"];
+        user.passwordHash = await argon2.hash(password);
+      }
+    }
+
+    if (!await argon2.verify(user.passwordHash, password)) {
         return json({
           success: false,
           errors: {
@@ -49,6 +60,10 @@ export async function POST({ request, fetch, cookies }) {
           },
         });
       }
+    if (argon2.needsRehash(user.passwordHash)) {
+      user.passwordHash = await argon2.hash(password);
+      saveData();
+    }
 
     cookies.set("token", user.token, {
       path: "/",

@@ -2,6 +2,7 @@ import { error, json } from "@sveltejs/kit";
 import z from "zod";
 import type { APIErrors } from "$lib/api.js";
 import { data, saveData } from "$lib/server/db";
+import argon2 from "argon2";
 
 const schema = z.object({
     username: z.string(),
@@ -97,7 +98,7 @@ export async function POST({ request, fetch, cookies }) {
 
     const token = crypto.randomUUID();
     data.users.push({
-      username, password, token,
+      username, passwordHash: await argon2.hash(password), token,
       solvedProblems: [],
     });
     saveData();
