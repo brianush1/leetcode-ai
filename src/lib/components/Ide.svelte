@@ -2,6 +2,8 @@
 	import { apiCall } from "$lib/api";
 	import type { JudgeResponse } from "../../routes/api/judge/+server";
 
+	export let problemId: number;
+
 	let code: string = `#include <bits/stdc++.h>
 using namespace std;
 
@@ -17,6 +19,7 @@ int main() {
 
 	async function onTest() {
 		const res: JudgeResponse = await apiCall("judge", {
+			problemId,
 			language,
 			filename,
 			code,

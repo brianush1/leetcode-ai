@@ -26,6 +26,7 @@ export async function load({ params, cookies, depends }) {
 
 	return {
 		regionData: REGIONS[regionId],
+		alreadySolved: user?.solvedProblems.includes(Number(problemId)),
 		problemData: {
 			...problemData,
 			statementHtml: problemData.statementHtml.replace(/<span class="math inline">(.*?)<\/span>/g, (_, val) => {
