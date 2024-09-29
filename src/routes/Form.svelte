@@ -2,25 +2,48 @@
   export let message1: string;
   export let message2: string;
 
-  import { data } from "../lib/server/db";
   import { goto } from '$app/navigation';
-  import { apiCall } from "$lib/api";
+  import { apiCall } from '$lib/api';
+  import type { FormResponse } from '$lib/types'; 
 
-  // Bind these variables to your input fields
   let username = '';
   let password = '';
 
-  function handleButton1Click() {
-    if (message1 === "Login") {
-      // Check if user exists
+  async function handleButton1Click() {
+    if (message1 === 'Login') {
+      // Attempt to log in the user
+      const res: FormResponse = await apiCall('login', {
+        username: username,
+        password: password,
+      });
+
+      if (res.success) {
+        // Login successful, redirect to home page
+        goto('/');
+      } else {
+        // Login failed, show error message
+        alert(res.message || 'Invalid username or password.');
+      }
     } else {
-      // Add new user
-      alert('User registered successfully');
+      // Attempt to sign up the user
+      const res: FormResponse = await apiCall('signup', {
+        username: username,
+        password: password,
+      });
+
+      if (res.success) {
+        // Sign up successful, redirect to login page
+        alert('User registered successfully');
+        goto('/login');
+      } else {
+        // Sign up failed, show error message
+        alert(res.message || 'Registration failed.');
+      }
     }
   }
 
   function handleButton2Click() {
-    if (message2 === "Sign Up") {
+    if (message2 === 'Sign Up') {
       goto('/signup');
     } else {
       goto('/login');
@@ -33,10 +56,8 @@
     <div class="card--header"></div>
     <div class="card--body">
       <label>Username</label>
-      <!-- Bind the input value to the username variable -->
       <input type="text" bind:value={username} />
       <label>Password</label>
-      <!-- Bind the input value to the password variable -->
       <input type="password" bind:value={password} />
     </div>
     <div class="card--footer">
@@ -51,7 +72,7 @@
     <br />
     <div class="card--footer">
       <button
-        type="submit"
+        type="button"
         class="btn_sign-up"
         on:click={handleButton2Click}
       >
