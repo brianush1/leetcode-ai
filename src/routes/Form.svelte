@@ -4,6 +4,7 @@
 
   import { data } from "../lib/server/db";
   import { goto } from '$app/navigation';
+  import { apiCall } from "$lib/api";
 
   // Bind these variables to your input fields
   let username = '';
@@ -12,18 +13,8 @@
   function handleButton1Click() {
     if (message1 === "Login") {
       // Check if user exists
-      const user = data.users.find(
-        (user: { username: string; password: string; }) => user.username === username && user.password === password
-      );
-      if (user) {
-        // Redirect to home page
-        goto('/');
-      } else {
-        alert('Invalid username or password');
-      }
     } else {
       // Add new user
-      data.users.push({ username, password });
       alert('User registered successfully');
     }
   }
