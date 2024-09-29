@@ -14,7 +14,7 @@
 </script>
 
 <div class="container1">
-    <Problem title={title} description={description} alreadySolved={data.alreadySolved}/>
+    <Problem title={title} regionId={$page.params.region} description={description} alreadySolved={data.alreadySolved}/>
     <Ide problemId={parseInt($page.params.problem)} />
 </div>
 
