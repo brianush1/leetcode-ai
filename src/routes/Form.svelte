@@ -56,15 +56,16 @@
     <div class="card--header"></div>
     <div class="card--body">
       <label>Username</label>
-      <input type="text" bind:value={username} />
+      <input type="text" bind:value={username} style="color: #ffffff;" />
       <label>Password</label>
-      <input type="password" bind:value={password} />
+      <input type="password" bind:value={password} style="color: #ffffff;"/>
     </div>
     <div class="card--footer">
       <button
         type="submit"
         class="btn_sign-up"
         on:click={handleButton1Click}
+        style="color: #000;"
       >
         {message1}
       </button>
@@ -75,6 +76,7 @@
         type="button"
         class="btn_sign-up"
         on:click={handleButton2Click}
+        style="color: #000;"
       >
         {message2}
       </button>
@@ -83,6 +85,10 @@
 </div>
 
 <style>
+input::placeholder{
+  color: #f00;
+}
+
 .card {
   width: 100%;
   max-width: 400px;
@@ -127,12 +133,8 @@ input {
   background-color: rgba(255, 255, 255, 0);
   border: 1px solid rgba(255, 255, 255, 1);
   border-radius: 4px;
-  transition: background-color 0.3s;
 }
-input:hover,
-input:focus {
-  background-color: rgba(255, 255, 255, 0.5);
-}
+
 
 .card--footer {
   display: flex;

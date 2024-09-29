@@ -1,5 +1,6 @@
 <script>
     import Form from "../Form.svelte";
+    import "@fontsource/advent-pro";
 </script>
 
 <div class="header push">Lootcode 10</div>
