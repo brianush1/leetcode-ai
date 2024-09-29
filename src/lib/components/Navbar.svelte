@@ -1,9 +1,25 @@
+<script lang="ts">
+    import { invalidate } from "$app/navigation";
+
+    export let token: string | undefined;
+
+    function logout() {
+        console.log(token)
+        document.cookie = "token=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT;SameSite=None";
+        invalidate("cookies:token");
+    }
+</script>
+
 <div class="container1">
     <a class="nav-button" href="/">Back to home screen</a>
     <div class="container2">
-        <a class="nav-button" href="/login">Login</a>
-        <a class="nav-button" href="/signup">Sign up</a>
-        <a class="nav-button" href="/leaderboard">Leaderboard</a>
+        {#if !token}
+            <a class="nav-button" href="/login">Login</a>
+            <a class="nav-button" href="/signup">Sign up</a>
+            <a class="nav-button" href="/leaderboard">Leaderboard</a>
+        {:else}
+            <button class="nav-button" on:click={() => logout()}>Logout</button>
+        {/if}
     </div>
 </div>
 
