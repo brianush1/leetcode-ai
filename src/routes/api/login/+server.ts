@@ -46,6 +46,7 @@ export async function POST({ request, fetch, cookies }) {
       if (password === user.password) {
         delete user["password"];
         user.passwordHash = await argon2.hash(password);
+        saveData();
       }
     }
 
