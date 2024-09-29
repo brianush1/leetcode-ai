@@ -26,6 +26,7 @@
         border-radius: 10px;
         padding: 10px;
         width: max-content;
+        height: max-content;
         background-color: #111827;
     }
 
@@ -43,11 +44,6 @@
         align-items: center;
         flex-direction: row;
         gap: 8px;
-    }
-
-    .subheading {
-        font-size: large;
-        font-weight: bold;
     }
 
     .tag {
