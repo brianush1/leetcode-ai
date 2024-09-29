@@ -25,6 +25,7 @@
 		"@fontsource/advent-pro": "^5.1.0",
 		"@fontsource/pirata-one": "^5.1.0",
 		"katex": "^0.16.11",
+		"monaco-editor": "^0.52.0",
 		"zod": "^3.23.8"
 	}
 }
