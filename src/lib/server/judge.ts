@@ -28,7 +28,7 @@ export interface CompilationResult {
 }
 
 const COMPILATION_TIME_LIMIT = 8000;
-const EXECUTION_TIME_LIMIT = 4000;
+const EXECUTION_TIME_LIMIT = 15000;
 
 export async function compile(language: Language, filename: string, code: string): Promise<CompilationResult | "error"> {
 	if (language === "java") {
