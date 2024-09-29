@@ -2,6 +2,7 @@
     import { invalidate } from "$app/navigation";
 
     export let token: string | undefined;
+    export let username: string | undefined;
 
     function logout() {
         console.log(token)
@@ -16,10 +17,11 @@
         {#if !token}
             <a class="nav-button" href="/login">Login</a>
             <a class="nav-button" href="/signup">Sign up</a>
-            <a class="nav-button" href="/leaderboard">Leaderboard</a>
         {:else}
+            <span>Logged in as <b>{username}</b></span>
             <button class="nav-button" on:click={() => logout()}>Logout</button>
         {/if}
+        <a class="nav-button" href="/leaderboard">Leaderboard</a>
     </div>
 </div>
 
@@ -43,7 +45,12 @@
 .container2 {
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 10px;
+}
+
+span {
+  color: white;
 }
 
 .nav-button {
