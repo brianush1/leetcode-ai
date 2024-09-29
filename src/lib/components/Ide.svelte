@@ -3,9 +3,12 @@
 	import type { JudgeResponse } from "../../routes/api/judge/+server";
 	import { onDestroy, onMount } from "svelte";
 	import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
-	import type { Language } from "$lib/server/judge";
+	import type { JudgeVerdict, Language } from "$lib/server/judge";
+	import { goto } from "$app/navigation";
 
 	export let problemId: number;
+	export let regionId: string;
+	export let alreadySolved: boolean;
 
 	let language = "c++";
 
@@ -60,14 +63,30 @@
 		setupLanguage(language as Language);
 	}
 
+	let isProcessing = false;
+	let showVerdict: JudgeVerdict | undefined;
+
 	async function onTest() {
-		const res: JudgeResponse = await apiCall("judge", {
-			problemId,
-			language,
-			filename: `Submission.${language === "java" ? "java" : language === "python" ? "py" : "cpp"}`,
-			code: editor.getValue(),
-		});
-		console.log(res, language);
+		isProcessing = true;
+
+		try {
+			const res: JudgeResponse = await apiCall("judge", {
+				problemId,
+				language,
+				filename: `Submission.${language === "java" ? "java" : language === "python" ? "py" : "cpp"}`,
+				code: editor.getValue(),
+			});
+
+			if ("success" in res && res.success) {
+				showVerdict = res.verdict;
+				if (res.verdict === "accepted") {
+					alreadySolved = true;
+				}
+			}
+		}
+		finally {
+			isProcessing = false;
+		}
 	}
 
 	let isOpen = false;
@@ -100,16 +119,70 @@
 	</div>
 	<p>Write {language[0].toUpperCase() + language.slice(1, language.length)} code here:</p>
 	<div class="editor" bind:this={editorContainer}></div>
-	<button class="submit-btn" on:click={onTest}>Submit</button>
+	<button class="btn" on:click={onTest} disabled={isProcessing}>{isProcessing ? "Judging..." : "Submit"}</button>
 </div>
 
+{#if showVerdict}
+	<div class="popup">
+		<h1>{showVerdict === "accepted" ? "Great job!" : "That's unfortunate"}</h1>
+		<h2>
+			{
+				showVerdict === "accepted" ? "You solved the problem!"
+				: showVerdict === "wrong-answer" ? "Your program produced incorrect output"
+				: showVerdict === "compile-error" ? "Your program didn't compile"
+				: showVerdict === "runtime-error" ? "Your program ran into a runtime error"
+				: showVerdict === "time-limit" ? "Your program exceeded the time limit"
+				: "???"
+			}
+		</h2>
+		<div class="button-bar">
+			<button class="btn" on:click={async () => {
+				await goto(`/regions/${regionId}`);
+			}}>Back to problemset</button>
+			<button class="btn" on:click={() => showVerdict = undefined}>Dismiss popup</button>
+		</div>
+	</div>
+{/if}
+
 <style>
+	.popup {
+		position: fixed;
+		left: 50%;
+		top: 50%;
+		translate: -50% -50%;
+		background-color: #111827;
+		padding: 20px;
+		border-radius: 10px;
+		border: 2px solid lightblue;
+
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.popup > * {
+		margin: 0;
+	}
+
+	.button-bar {
+		display: flex;
+		flex-direction: row;
+		gap: 10px;
+	}
+
+	.button-bar > .btn {
+		font-size: 16px;
+		border-radius: 8px;
+		background: #eee;
+	}
+
 	.editor {
 		width: 50vw;
 		height: 600px;
 	}
 
-	.submit-btn {
+	.btn {
 		border: none;
 		background: linear-gradient(45deg, yellow, orange);
 		color: black;
@@ -117,6 +190,18 @@
 		font-size: 24px;
 		font-weight: 700;
 		border-radius: 16px;
+	}
+
+	.btn:disabled {
+		opacity: 0.5;
+	}
+
+	.btn:hover:not(:disabled) {
+		filter: brightness(120%);
+	}
+
+	.btn:active:not(:disabled) {
+		filter: brightness(70%);
 	}
 
     .container1 {

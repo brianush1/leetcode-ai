@@ -11,11 +11,12 @@
     };
     let title = data.problemData.name;
     let description = data.problemData.statementHtml;
+    let solved = data.alreadySolved;
 </script>
 
 <div class="container1">
-    <Problem title={title} regionId={$page.params.region} description={description} alreadySolved={data.alreadySolved}/>
-    <Ide problemId={parseInt($page.params.problem)} />
+    <Problem title={title} regionId={$page.params.region} description={description} alreadySolved={solved}/>
+    <Ide regionId={$page.params.region} problemId={parseInt($page.params.problem)} bind:alreadySolved={solved} />
 </div>
 
 <style>

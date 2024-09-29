@@ -102,7 +102,7 @@ export async function compile(language: Language, filename: string, code: string
 			"--rm",
 			"-v", `${tempDir}:/work:rw`,
 			"-t", "cgr.dev/chainguard/gcc-glibc:latest",
-			"-O2", `/work/${basename}.cpp`, "-o", `/work/${basename}`, "-lstdc++",
+			"-O2", `/work/${basename}.cpp`, "-o", `/work/${basename}`, "-lstdc++", "-lm",
 		]);
 		const killTimeout = setTimeout(() => {
 			proc.kill("SIGKILL");
