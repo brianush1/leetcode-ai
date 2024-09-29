@@ -145,6 +145,7 @@
 						filename: `Submission.${language === "java" ? "java" : language === "python" ? "py" : "cpp"}`,
 						code: editor.getValue(),
 					});
+					console.log(result);
 					hintStatus = {
 						hint: result.success ? result.hint : "Failed to get hint"
 					};
@@ -155,7 +156,7 @@
 			</div>
 		</div>
 	{:else if hintStatus !== "none"}
-		<div class="ai-hint">
+		<div class="ai-hint2">
 			<b>Hint:</b> {hintStatus.hint}
 		</div>
 	{/if}
@@ -210,6 +211,11 @@
 		gap: 8px;
 		align-items: center;
 		font-size: 24px;
+	}
+
+	.ai-hint2 {
+		contain: size;
+		line-height: 24px;
 	}
 
 	.button-bar {

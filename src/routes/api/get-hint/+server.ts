@@ -50,22 +50,27 @@ export async function POST({ request, fetch, cookies }) {
     });
   }
 
-  console.log(process.env.OPENROUTER_API_KEY);
+  // console.log(process.env.OPENROUTER_API_KEY);
 
   const openai = new OpenAI({
-    apiKey: process.env.OPENROUTER_API_KEY,
-    baseURL: "https://openrouter.ai/api/v1",
+    // apiKey: process.env.OPENROUTER_API_KEY,
+    // baseURL: "https://openrouter.ai/api/v1",
+    apiKey: process.env.GROQ_API_KEY,
+    baseURL: "https://api.groq.com/openai/v1",
   });
 
   const { verdict, title, description, language, filename, code } = input.data;
 
-  const prompt = `As a code assistant, please provide hints given the following information below"
-    Problem description: ${description}
-    User code: ${code}
-    Programming Language: ${language}`;
+  const prompt = `I am trying to solve a programming problem, and I received a '${verdict}' verdict from the judge for my solution (${filename}). Please give me a short hint that will assist me in making my solution correct. Do NOT give me any code, just give me a short hint to put me on the right track towards solving the problem. Be direct and to the point.
+
+Problem description: ${description}
+
+${filename}:
+${code}`;
 
   const completion = await openai.chat.completions.create({
-    model: "openai/gpt-4o",
+    // model: "openai/gpt-4o",
+    model: "llama-3.1-70b-versatile",
     messages: [{ role: "user", content: prompt }],
   });
 
@@ -73,6 +78,6 @@ export async function POST({ request, fetch, cookies }) {
 
   return json({
     success: true,
-    hint: completion.choices[0].message,
+    hint: completion.choices[0].message.content,
   });
 }
