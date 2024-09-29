@@ -3,6 +3,7 @@
     <div class="container2">
         <a class="nav-button" href="/login">Login</a>
         <a class="nav-button" href="/signup">Sign up</a>
+        <a class="nav-button" href="/leaderboard">Leaderboard</a>
     </div>
 </div>
 

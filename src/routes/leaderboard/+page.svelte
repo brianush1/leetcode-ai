@@ -11,7 +11,7 @@
   </script>
   
   <BackButton backUrl="/"></BackButton>
-  <h1>Leaderboard</h1>
+  <h1 class="push">Leaderboard</h1>
   <ol>
 	{#each data.leaderboard as item, index}
 	  <li class="item-container" data-position={index + 1}>
@@ -33,6 +33,10 @@
 	* {
 	  padding: 0px;
 	  margin: 0px;
+	}
+
+	.push {
+		margin-top: 45px;
 	}
   
 	h1 {
