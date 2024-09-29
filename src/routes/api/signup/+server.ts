@@ -98,6 +98,7 @@ export async function POST({ request, fetch, cookies }) {
     const token = crypto.randomUUID();
     data.users.push({
       username, password, token,
+      solvedProblems: [],
     });
     saveData();
   
