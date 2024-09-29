@@ -22,7 +22,6 @@
         backdrop-filter: blur(20px);
         padding: 15px 15px;
         box-sizing: border-box;
-        border-bottom: 2px solid lightblue;
     }
 
     .container2 {
