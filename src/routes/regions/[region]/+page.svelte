@@ -35,7 +35,7 @@
 		const nextProblems = new Set<number>();
 		for (const problem of problems) {
 			const prereqs = problems.filter(x => x.outedges.find(y => y === problem.id)).map(x => x.id);
-			const allPrereqsUnlocked = prereqs.every(x => !isLocked.get(x));
+			const allPrereqsUnlocked = prereqs.every(x => !isLocked.get(x) || !problems.find(y => y.id));
 			if (allPrereqsUnlocked && data.solvedProblems) {
 				nextProblems.add(problem.id);
 			}
