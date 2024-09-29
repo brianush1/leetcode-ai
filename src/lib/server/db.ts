@@ -5,6 +5,7 @@ export interface Database {
 		username: string;
 		password: string;
 		token: string;
+		solvedProblems: number[];
 	}[];
 }
 

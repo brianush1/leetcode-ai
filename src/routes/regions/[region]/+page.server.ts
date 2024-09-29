@@ -1,10 +1,18 @@
 import { REGIONS } from "$lib/regions";
+import { data, type Database } from "$lib/server/db.js";
 import { getProblemList } from "$lib/server/problems";
 import { error } from "@sveltejs/kit";
 
-export async function load({ params }) {
+export async function load({ params, cookies, depends }) {
 	const regionId = params.region;
 	const map = await getProblemList();
+
+	const token = cookies.get("token");
+	depends("cookies:token");
+	let user: Database["users"][number] | undefined;
+	if (token) {
+		user = data.users.find(x => x.token === token);
+	}
 
 	const regionData = map.get(regionId);
 	if (!regionData)
@@ -19,6 +27,7 @@ export async function load({ params }) {
 
 	return {
 		regionData: REGIONS[regionId],
+		solvedProblems: user?.solvedProblems ?? [],
 		problems,
 	};
 }
