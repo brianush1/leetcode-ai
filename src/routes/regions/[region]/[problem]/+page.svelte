@@ -1,14 +1,18 @@
-<script>
+<script lang="ts">
     import Problem from "$lib/components/Problem.svelte";
     import Ide from "$lib/components/Ide.svelte"
-    let title = "Problem 1"
-    let description = "Dis problem is no easyyyyy"
-    let expectedInput = "Some input"
-    let expectedOutput = "Yahoo"
+	import type { REGIONS } from "$lib/regions";
+	import type { ProblemStatement } from "$lib/server/problems";
+    export let data: {
+        regionData: typeof REGIONS[string];
+        problemData: ProblemStatement;
+    };
+    let title = data.problemData.name;
+    let description = data.problemData.statementHtml;
 </script>
 
 <div class="container1">
-    <Problem title={title} description={description} expectedInput={expectedInput} expectedOutput={expectedOutput}/>
+    <Problem title={title} description={description}/>
     <Ide />
 </div>
 
@@ -16,7 +20,9 @@
     .container1 {
         display: flex;
         flex-direction: row;
-        gap: 50px;
+        align-items: stretch;
+        height: calc(100vh - 16px);
+        gap: 8px;
         color: lightblue
     }
 </style>
