@@ -28,8 +28,6 @@ export async function POST({ request, fetch, cookies }) {
 
   const { code, filename, language } = input.data;
 
-  // console.log();
-
   const stat = (await getProblemList()).get("geometry")![0];
   console.log(stat);
   console.log(await judgeSubmission(stat, language, filename, code));

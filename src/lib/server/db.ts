@@ -4,6 +4,7 @@ export interface Database {
 	users: {
 		username: string;
 		password: string;
+		token: string;
 	}[];
 }
 

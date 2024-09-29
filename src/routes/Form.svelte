@@ -1,42 +1,73 @@
 <script lang="ts">
-    export let message1: string;
-    export let message2: string;
+  export let message1: string;
+  export let message2: string;
 
-    import { goto } from '$app/navigation';
+  import { data } from "../lib/server/db";
+  import { goto } from '$app/navigation';
 
-    function handleSignupClick() {
-      if (message2 === "Sign Up") {
-        goto('/signup');
+  // Bind these variables to your input fields
+  let username = '';
+  let password = '';
+
+  function handleButton1Click() {
+    if (message1 === "Login") {
+      // Check if user exists
+      const user = data.users.find(
+        (user: { username: string; password: string; }) => user.username === username && user.password === password
+      );
+      if (user) {
+        // Redirect to home page
+        goto('/');
+      } else {
+        alert('Invalid username or password');
       }
-      else {
-        goto('/login');
-      }
+    } else {
+      // Add new user
+      data.users.push({ username, password });
+      alert('User registered successfully');
     }
+  }
+
+  function handleButton2Click() {
+    if (message2 === "Sign Up") {
+      goto('/signup');
+    } else {
+      goto('/login');
+    }
+  }
 </script>
-  
+
 <div class="container">
-    <div class="card">
-      <div class="card--header">
-      </div>
-      <div class="card--body">
-        <label>Username</label>
-        <input type="text">
-        <label>Password</label>
-        <input type="password">
-      </div>
-      <div class="card--footer">
-        <button type="submit" id="signup" class="btn_sign-up">{message1}</button>
-      </div>
-      <br>
-      <div class="card--footer">
-        <button 
-        type="submit" 
-        id="signup" 
-        class="btn_sign-up"
-        on:click={handleSignupClick}
-        >{message2}</button>
-      </div>
+  <div class="card">
+    <div class="card--header"></div>
+    <div class="card--body">
+      <label>Username</label>
+      <!-- Bind the input value to the username variable -->
+      <input type="text" bind:value={username} />
+      <label>Password</label>
+      <!-- Bind the input value to the password variable -->
+      <input type="password" bind:value={password} />
     </div>
+    <div class="card--footer">
+      <button
+        type="submit"
+        class="btn_sign-up"
+        on:click={handleButton1Click}
+      >
+        {message1}
+      </button>
+    </div>
+    <br />
+    <div class="card--footer">
+      <button
+        type="submit"
+        class="btn_sign-up"
+        on:click={handleButton2Click}
+      >
+        {message2}
+      </button>
+    </div>
+  </div>
 </div>
 
 <style>
