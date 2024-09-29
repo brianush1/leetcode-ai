@@ -27,7 +27,7 @@ export async function load({ params, cookies, depends }) {
 
 	return {
 		regionData: REGIONS[regionId],
-		solvedProblems: user?.solvedProblems ?? [],
+		solvedProblems: user?.solvedProblems,
 		problems,
 	};
 }

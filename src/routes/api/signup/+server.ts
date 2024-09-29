@@ -101,6 +101,14 @@ export async function POST({ request, fetch, cookies }) {
       solvedProblems: [],
     });
     saveData();
+
+    cookies.set("token", token, {
+      path: "/",
+      sameSite: "strict",
+      secure: true,
+      httpOnly: false,
+      maxAge: 3600 * 24 * 30,
+    });
   
     return json({
       success: true,

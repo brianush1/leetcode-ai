@@ -7,7 +7,7 @@
 
 	export let data: {
 		regionData: (typeof REGIONS)[string];
-		solvedProblems: number[];
+		solvedProblems?: number[];
 		problems: {
 			id: number;
 			name: string;
@@ -28,15 +28,15 @@
 		isLocked = new Map<number, boolean>();
 		isSolved = new Map<number, boolean>();
 		for (const problem of problems) {
-			isLocked.set(problem.id, !data.solvedProblems.find(x => x === problem.id));
-			isSolved.set(problem.id, !!data.solvedProblems.find(x => x === problem.id));
+			isLocked.set(problem.id, data.solvedProblems ? !data.solvedProblems.find(x => x === problem.id) : true);
+			isSolved.set(problem.id, data.solvedProblems ? !!data.solvedProblems.find(x => x === problem.id) : false);
 		}
 
 		const nextProblems = new Set<number>();
 		for (const problem of problems) {
 			const prereqs = problems.filter(x => x.outedges.find(y => y === problem.id)).map(x => x.id);
 			const allPrereqsUnlocked = prereqs.every(x => !isLocked.get(x));
-			if (allPrereqsUnlocked) {
+			if (allPrereqsUnlocked && data.solvedProblems) {
 				nextProblems.add(problem.id);
 			}
 		}

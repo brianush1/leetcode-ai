@@ -37,7 +37,8 @@ export async function POST({ request, fetch, cookies }) {
         },
       });
     }
-    if (!data.users.find(x => x.password === password)) {
+    const user = data.users.find(x => x.password === password);
+    if (!user) {
         return json({
           success: false,
           errors: {
@@ -48,12 +49,18 @@ export async function POST({ request, fetch, cookies }) {
           },
         });
       }
-    
-    const token = crypto.randomUUID();
+
+    cookies.set("token", user.token, {
+      path: "/",
+      sameSite: "strict",
+      secure: true,
+      httpOnly: false,
+      maxAge: 3600 * 24 * 30,
+    });
   
     return json({
       success: true,
-      token,
+      token: user.token,
     });
 }
   
