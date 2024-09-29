@@ -6,9 +6,11 @@
 	  }[];
 	};
   
+    import BackButton from "$lib/components/BackButton.svelte";
 	import "@fontsource/advent-pro";
   </script>
   
+  <BackButton backUrl="/"></BackButton>
   <h1>Leaderboard</h1>
   <ol>
 	{#each data.leaderboard as item, index}
