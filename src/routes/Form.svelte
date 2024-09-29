@@ -2,7 +2,7 @@
   export let message1: string;
   export let message2: string;
 
-  import { goto } from '$app/navigation';
+  import { goto, invalidate } from '$app/navigation';
   import { apiCall } from '$lib/api';
   import type { FormResponse } from '$lib/types'; 
 
@@ -19,6 +19,7 @@
 
       if (res.success) {
         // Login successful, redirect to home page
+        await invalidate("cookies:token");
         goto('/');
       } else {
         // Login failed, show error message
@@ -34,6 +35,7 @@
       if (res.success) {
         // Sign up successful, redirect to login page
         alert('User registered successfully');
+        await invalidate("cookies:token");
         goto('/login');
       } else {
         // Sign up failed, show error message

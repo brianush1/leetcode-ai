@@ -1,6 +1,6 @@
 export async function load({ cookies, depends }) {
   const token = cookies.get("token");
-  depends("cookie:token");
+  depends("cookies:token");
 
   return { token };
 }

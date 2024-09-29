@@ -75,8 +75,6 @@ export async function POST({ request, fetch, cookies }) {
     maxAge: 3600 * 24 * 30,
   });
 
-  invalidate("cookie:token");
-
   return json({
     success: true,
     token: user.token,
